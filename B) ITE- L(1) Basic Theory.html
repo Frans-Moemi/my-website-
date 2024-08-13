@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Game</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      font-family: 'poppins', sans-serif;
+      box-sizing: border-box;
+    }
+    body {
+      background: #000;
+    }
+    .app {
+      background: #000;
+      height: 1600px;
+      width: 900px;
+      margin: 100px auto 0;
+      border: 5px solid #fff;
+      border-radius: 10px;
+      padding: 30px;
+      z-index: 0;
+
+    }
+    .app h1 {
+      font-size: 40px;
+      color: #fff;
+      font-weight: bold;
+      border-bottom: 5px solid #fff;
+      padding-bottom: 10px;
+    }
+    .quiz {
+      padding: 200px 100px;
+    }
+    .quiz h2 {
+      font-size: 35px;
+      color: #fff;
+      font-weight: bold;
+      padding-bottom: 600px;
+    }
+    .btn {
+      background: #87CEEB;
+      color: #fff;
+      font-weight: bold;
+      	font-size: 30px;
+      height: 90px;
+      width: 600px;
+      border: 5px solid #fff;
+      padding: 10px;
+      margin: 10px 0;
+      text-align: centre;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .btn:hover:not([disabled]){
+      background: #222;
+      color: #fff;
+    }
+    .btn:disabled{
+      cursor: no-drop;;
+    }
+    #next-btn{
+      background: #001e4d;
+      color: #fff;
+      font-weight: 600;
+      font-size: 30px;
+      height: 90px;
+      width: 300px;
+      padding: 10px;
+      margin: 20px auto 0;
+      border: 5px solid #fff;
+      border-radius: 4px;
+      cursor: pointer;
+      display: none;
+      right: 60px;
+    }
+    .correct{
+      background: #9aeabc;
+    }
+    .incorrect{
+      background: #ff9393;
+    }
+
+#timer-container {
+			background-color: #000;
+			border: 5px solid #fff;
+  position: absolute;
+  top: 17%;
+  left: 81%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+			width: 180px;
+  height: 80px;
+		}
+		
+		#timer {
+			font-size: 30px;
+  font-weight: bold;
+			color: #fff;
+			transition: color 0.5s;
+		}
+		
+		#timer.zero {
+			color: #ff0000;
+		}
+  </style>
+</head>
+<body>
+  	<div id="timer-container">
+		  <span id="timer">15</span>
+	  </div>
+  <div class="app">
+    <h1>Basic Theory</h1>
+    <div class="quiz">
+      <h2 id="question">Question goes here</h2>
+        <span id="score">0</span>
+      <div id="answer-buttons">
+        <button class="btn">answer 1</button>
+        <button class="btn">answer 2</button>
+        <button class="btn">answer 3</button>
+        <button class="btn">answer 4</button>
+      </div>
+      <button id="next-btn">Next</button>
+    </div>
+  </div>
+<script>
+const questions = [
+  {
+    question: "What is the SI unit of measurement for electric power?",
+    answers: [
+      { text: "Ohm", correct: false },
+      { text: "Watt", correct: true },
+      { text: "Ampere", correct: false },
+      { text: "volt", correct: false },
+    ],
+  },
+  {
+    question: "Which type of circuit has multiple paths for current to flow?",
+    answers: [
+      { text: "Parallel Circuit", correct: true },
+      { text: "Series Circuit", correct: false },
+      { text: "Multiplier Circuit", correct: false },
+      { text: "Path Circuit", correct: false },
+    ],
+  },
+  {
+    question: "A combination of electric cells is known as what?",
+    answers: [
+      { text: "Capacitor", correct: false },
+      { text: "Filter", correct: false },
+      { text: "Combiner", correct: false },
+      { text: "Battery", correct: true },
+    ],
+  },
+  {
+    question: "The opposition of the flow of current in an electric circuit is known as what?",
+    answers: [
+      { text: "Reactance", correct: false },
+      { text: "Resistance", correct: true },
+      { text: "Capacitance", correct: false },
+      { text: "impedance", correct: false },
+    ],
+  },
+    {
+    question: "What is the SI unit of measurement for electrical resistance?",
+    answers: [
+      { text: "Henry", correct: false },
+      { text: "Farad", correct: false },
+      { text: "Watt", correct: false },
+      { text: "Ohm", correct: true },
+    ],
+  },
+    {
+    question: "According to ohm's law, current is directly proportional to what?",
+    answers: [
+      { text: "Voltage", correct: true },
+      { text: "Temperature", correct: false },
+      { text: "Resistance", correct: false },
+      { text: "Capacitance", correct: false },
+    ],
+  },
+    {
+    question: "Which type of circuit has one path for current to flow?",
+    answers: [
+      { text: "Parallel Circuit", correct: false },
+      { text: "Filter Circuit", correct: false },
+      { text: "Rectifier Circuit", correct: false },
+      { text: "Series Circuit", correct: true },
+    ],
+  },
+    {
+    question: "Which current flows only in one direction?",
+    answers: [
+      { text: "Alternating Current", correct: false },
+      { text: "Conservative Current", correct: false },
+      { text: "Direct Current", correct: true },
+      { text: "Speculated Current", correct: false },
+    ],
+  },
+  {
+    question: "What is the SI unit of measurement for current?",
+    answers: [
+      { text: "Ohm", correct: false },
+      { text: "Volt", correct: false },
+      { text: "Joule", correct: false },
+      { text: "Ampere", correct: true },
+    ],
+  },
+  {
+    question: "For Ohm's law to be applicable, the temperature must do what?",
+    answers: [
+      { text: "Fluctuate", correct: false },
+      { text: "Remain constant", correct: true },
+      { text: "Increase", correct: false },
+      { text: "Decrease", correct: false },
+    ],
+  },
+  {
+    question: "Which type of current periodically reverses direction?",
+    answers: [
+      { text: "Alternating Current", correct: true },
+      { text: "Forward Current", correct: false },
+      { text: "Direct Current", correct: false },
+      { text: "Periodic Current", correct: false },
+    ],
+  },
+      {
+    question: "What is the SI unit of measurement for voltage ?",
+    answers: [
+      { text: "Decibel", correct: false },
+      { text: "Farad", correct: false },
+      { text: "volt", correct: true },
+      { text: "Ampere", correct: false },
+    ],
+  },
+  {
+    question: "According to Ohm's law, current is inversely proportional to what?",
+    answers: [
+      { text: "resistance", correct: true },
+      { text: "voltage", correct: false },
+      { text: "temperature", correct: false },
+      { text: "energy", correct: false },
+    ],
+  },
+  {
+    question: "When current flows from negative to positive, the flow is known as?",
+    answers: [
+      { text: "Polarity flow", correct: false },
+      { text: "Derived flow", correct: false },
+      { text: "Conventional flow", correct: false },
+      { text: "electron flow", correct: true },
+    ],
+  },
+  {
+    question: "When current flows from positive to negative, the flow is known as?",
+    answers: [
+      { text: "Electron flow", correct: false },
+      { text: "Conventional flow", correct: true },
+      { text: "Directed flow", correct: false },
+      { text: "Filtered flow", correct: false },
+    ],
+  },
+];
+
+const questionElement = document.getElementById("question");
+const answerButtons = document.getElementById("answer-buttons");
+const nextButton = document.getElementById("next-btn");
+const timerElement = document.getElementById("timer");
+let currentQuestionIndex = 0;
+let score = 0;
+let seconds = 15;
+let intervalId;
+
+// Add sound effects
+const correctSound = new Audio("correct.mp3");
+const incorrectSound = new Audio("incorrect.mp3");
+
+function startQuiz() {
+  currentQuestionIndex = 0;
+  score = 0;
+  seconds = 15;
+  timerElement.innerText = seconds;
+  nextButton.innerHTML = "Next";
+  startTimer();
+  showQuestion();
+}
+
+function showQuestion() {
+  resetState();
+  let currentQuestion = questions[currentQuestionIndex];
+  let questionNo = currentQuestionIndex + 1;
+  questionElement.innerHTML = questionNo + ". " + currentQuestion.question;
+  currentQuestion.answers.forEach((answer) => {
+    const button = document.createElement("button");
+    button.innerHTML = answer.text;
+    button.classList.add("btn");
+    answerButtons.appendChild(button);
+    if (answer.correct) {
+      button.dataset.correct = answer.correct;
+    }
+    button.addEventListener("click", selectAnswer);
+  });
+}
+
+function resetState() {
+  nextButton.style.display = "none";
+  while (answerButtons.firstChild) {
+    answerButtons.removeChild(answerButtons.firstChild);
+  }
+}
+
+function selectAnswer(e) {
+  clearInterval(intervalId);
+  const selectedBtn = e.target;
+  const isCorrect = selectedBtn.dataset.correct === "true";
+  if (isCorrect) {
+    selectedBtn.classList.add("correct");
+    score++;
+    correctSound.play(); // Play correct sound
+  } else {
+    selectedBtn.classList.add("incorrect");
+    incorrectSound.play(); // Play incorrect sound
+  }
+  Array.from(answerButtons.children).forEach((button) => {
+    if (button.dataset.correct === "true") {
+      button.classList.add("correct");
+    }
+    button.disabled = true;
+  });
+  nextButton.style.display = "block";
+}
+
+function showScore() {
+  resetState();
+  clearInterval(intervalId);
+  questionElement.innerHTML = `You scored: ${score} / ${questions.length}`;
+  nextButton.innerHTML = "Play again";
+  nextButton.style.display = "block";
+}
+
+function handleNextButton() {
+  currentQuestionIndex++;
+  if (currentQuestionIndex < questions.length) {
+    startTimer();
+    showQuestion();
+  } else {
+    showScore();
+  }
+}
+
+function startTimer() {
+  seconds = 15;
+  timerElement.innerText = seconds;
+  intervalId = setInterval(() => {
+    seconds--;
+    timerElement.innerText = seconds;
+    if (seconds === 0) {
+      clearInterval(intervalId);
+      nextButton.style.display = "block";
+      showCorrectAnswer();
+    }
+  }, 1000);
+}
+
+function showCorrectAnswer() {
+  const correctAnswerButton = answerButtons.querySelector('[data-correct="true"]');
+  correctAnswerButton.classList.add("correct");
+  correctAnswerButton.scrollIntoView({ behavior: 'smooth' });
+}
+
+nextButton.addEventListener("click", () => {
+  if (currentQuestionIndex < questions.length) {
+    handleNextButton();
+  } else {
+    startQuiz();
+  }
+});
+
+startQuiz();
+</script>
+</body>
+</html>
+
+
+
+
